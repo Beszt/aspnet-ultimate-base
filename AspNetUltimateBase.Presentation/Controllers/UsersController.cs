@@ -12,7 +12,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace AspNetUltimateBase.Presentation.Controllers;
 
 [Authorize(Roles = "admin")]
-public class UserController(
+[Route("users")]
+public class UsersController(
     IServiceProvider _ServicesCollection,
     IMediator _Mediator)
     : Controller
@@ -20,7 +21,7 @@ public class UserController(
     [SwaggerOperation("Create new user")]
     [SwaggerResponse(201, "User created")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpPost("/user")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
     {
         CreateUserCommandValidator validator = _ServicesCollection.GetRequiredService<CreateUserCommandValidator>();
@@ -37,7 +38,7 @@ public class UserController(
     [SwaggerOperation("Get user determined by it's login")]
     [SwaggerResponse(200, "JSON with user info", typeof(UserDto))]
     [SwaggerResponse(404, "User not found")]
-    [HttpGet("/user/{login}")]
+    [HttpGet("{login}")]
     public async Task<IActionResult> Get(string login)
     {
         UserDto user = await _Mediator.Send(new GetUserQuery(login));
@@ -51,7 +52,7 @@ public class UserController(
     [SwaggerOperation("Edit exististing user")]
     [SwaggerResponse(200, "User updated")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpPut("/user")]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
     {
         UpdateUserCommandValidator validator = _ServicesCollection.GetRequiredService<UpdateUserCommandValidator>();
@@ -68,7 +69,7 @@ public class UserController(
     [SwaggerOperation("Delete user determined it's login")]
     [SwaggerResponse(200, "User deleted")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpDelete("/user/{login}")]
+    [HttpDelete("{login}")]
     public async Task<IActionResult> Delete(string login)
     {
         DeleteUserCommand command = new DeleteUserCommand { Login = login };
@@ -84,4 +85,3 @@ public class UserController(
         return Ok();
     }
 }
-

@@ -12,7 +12,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace AspNetUltimateBase.Presentation.Controllers;
 
 [Authorize]
-public class BarcodeController(
+[Route("products")]
+public class ProductsController(
     IServiceProvider _ServicesCollection,
     IMediator _Mediator)
     : Controller
@@ -20,7 +21,7 @@ public class BarcodeController(
     [SwaggerOperation("Create new product")]
     [SwaggerResponse(201, "Product created")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpPost("/barcode")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateProductCommand command)
     {
         command.UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
@@ -38,7 +39,7 @@ public class BarcodeController(
 
     [SwaggerOperation("Get all products")]
     [SwaggerResponse(200, "JSON with products info", typeof(IEnumerable<ProductDto>))]
-    [HttpGet("/barcode")]
+    [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
@@ -47,10 +48,30 @@ public class BarcodeController(
         return Ok(products);
     }
 
+    [SwaggerOperation("Get random products")]
+    [SwaggerResponse(200, "JSON with random products info", typeof(IEnumerable<ProductDto>))]
+    [SwaggerResponse(400, "Bad Request with validations errors")]
+    [HttpGet("random/{count}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetRandom(int count)
+    {
+        GetRandomProductsQuery query = new() { Count = count };
+
+        GetRandomProductsQueryValidator validator = _ServicesCollection.GetRequiredService<GetRandomProductsQueryValidator>();
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        if (!result.IsValid)
+            return BadRequest(result.Errors);
+
+        IEnumerable<ProductDto> products = await _Mediator.Send(query);
+
+        return Ok(products);
+    }
+
     [SwaggerOperation("Get product determined by EAN code")]
     [SwaggerResponse(200, "JSON with product info", typeof(ProductDto))]
     [SwaggerResponse(404, "Product not found")]
-    [HttpGet("/barcode/{barcode}")]
+    [HttpGet("{barcode}")]
     [AllowAnonymous]
     public async Task<IActionResult> Get(long barcode)
     {
@@ -65,7 +86,7 @@ public class BarcodeController(
     [SwaggerOperation("Edit exististing product")]
     [SwaggerResponse(200, "Product updated")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpPut("/barcode")]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateProductCommand command)
     {
         command.UserId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
@@ -84,7 +105,7 @@ public class BarcodeController(
     [SwaggerOperation("Delete product determined EAN code")]
     [SwaggerResponse(200, "Product deleted")]
     [SwaggerResponse(400, "Bad Request with validations errors")]
-    [HttpDelete("/barcode/{barcode}")]
+    [HttpDelete("{barcode}")]
     public async Task<IActionResult> Delete(long barcode)
     {
         DeleteProductCommand command = new DeleteProductCommand

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using AspNetUltimateBase.Application.Dtos;
 using AspNetUltimateBase.Application.Queries.Product;
+using AspNetUltimateBase.Application.Validators.Product;
 using AspNetUltimateBase.Presentation.Controllers;
 using FluentAssertions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +13,7 @@ using Xunit;
 
 namespace AspNetUltimateBase.Presentation.Tests.Controllers;
 
-public class BarcodeControllerTests
+public class ProductsControllerTests
 {
     [Fact]
     public async Task GetAll_ReturnsOkWithProductList()
@@ -26,7 +28,7 @@ public class BarcodeControllerTests
         mediator.Setup(m => m.Send(It.IsAny<GetProductsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
 
-        BarcodeController controller = new(services, mediator.Object);
+        ProductsController controller = new(services, mediator.Object);
 
         IActionResult result = await controller.GetAll();
 
@@ -42,7 +44,7 @@ public class BarcodeControllerTests
         mediator.Setup(m => m.Send(It.IsAny<GetProductQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ProductDto?)null);
 
-        BarcodeController controller = new(services, mediator.Object);
+        ProductsController controller = new(services, mediator.Object);
 
         IActionResult result = await controller.Get(123L);
 
@@ -58,11 +60,51 @@ public class BarcodeControllerTests
         mediator.Setup(m => m.Send(It.IsAny<GetProductQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dto);
 
-        BarcodeController controller = new(services, mediator.Object);
+        ProductsController controller = new(services, mediator.Object);
 
         IActionResult result = await controller.Get(dto.Barcode);
 
         OkObjectResult ok = result.Should().BeOfType<OkObjectResult>().Subject;
         ok.Value.Should().Be(dto);
+    }
+
+    [Fact]
+    public async Task GetRandom_ReturnsBadRequest_WhenCountIsNotPositive()
+    {
+        ServiceCollection collection = new();
+        collection.AddScoped<GetRandomProductsQueryValidator>();
+        ServiceProvider services = collection.BuildServiceProvider();
+        Mock<IMediator> mediator = new();
+
+        ProductsController controller = new(services, mediator.Object);
+
+        IActionResult result = await controller.GetRandom(0);
+
+        BadRequestObjectResult badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badRequest.Value.Should().BeAssignableTo<IEnumerable<ValidationFailure>>();
+    }
+
+    [Fact]
+    public async Task GetRandom_ReturnsOkWithProducts_WhenCountIsValid()
+    {
+        ServiceCollection collection = new();
+        collection.AddScoped<GetRandomProductsQueryValidator>();
+        ServiceProvider services = collection.BuildServiceProvider();
+        Mock<IMediator> mediator = new();
+        List<ProductDto> products =
+        [
+            new() { Barcode = 111L, Name = "Bar 1" },
+            new() { Barcode = 222L, Name = "Bar 2" }
+        ];
+        mediator.Setup(m => m.Send(It.IsAny<GetRandomProductsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(products);
+
+        ProductsController controller = new(services, mediator.Object);
+
+        IActionResult result = await controller.GetRandom(2);
+
+        OkObjectResult ok = result.Should().BeOfType<OkObjectResult>().Subject;
+        ok.Value.Should().BeEquivalentTo(products);
+        mediator.Verify(m => m.Send(It.Is<GetRandomProductsQuery>(q => q.Count == 2), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

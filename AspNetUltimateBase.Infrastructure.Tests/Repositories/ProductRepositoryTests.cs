@@ -41,6 +41,23 @@ public class ProductRepositoryTests
         repository.WasCreatedBy(product.Barcode, 99).Should().BeFalse();
     }
 
+    [Fact]
+    public async Task GetRandom_ReturnsRequestedCountWithDetails()
+    {
+        await using FoodBarDbContext context = CreateContext();
+        SeedProduct(context, createdBy: 1, id: 1, barcode: 1001);
+        SeedProduct(context, createdBy: 1, id: 2, barcode: 1002);
+        SeedProduct(context, createdBy: 1, id: 3, barcode: 1003);
+        await context.SaveChangesAsync();
+
+        ProductRepository repository = new(context);
+
+        IEnumerable<ProductEntity> random = await repository.GetRandom(2);
+
+        random.Should().HaveCount(2);
+        random.Should().OnlyContain(p => p.ProductDetails != null);
+    }
+
     private static FoodBarDbContext CreateContext()
     {
         DbContextOptions<FoodBarDbContext> options = new DbContextOptionsBuilder<FoodBarDbContext>()
@@ -64,12 +81,12 @@ public class ProductRepositoryTests
         return context;
     }
 
-    private static ProductEntity SeedProduct(FoodBarDbContext context, int createdBy)
+    private static ProductEntity SeedProduct(FoodBarDbContext context, int createdBy, int id = 1, long barcode = 1234567890123)
     {
         ProductEntity product = new()
         {
-            Id = 1,
-            Barcode = 1234567890123,
+            Id = id,
+            Barcode = barcode,
             Name = "Protein Bar",
             Description = "Chocolate",
             CreatedBy = createdBy,
@@ -78,8 +95,8 @@ public class ProductRepositoryTests
             UpdatedAt = DateTime.UtcNow,
             ProductDetails = new ProductDetailEntity
             {
-                Id = 1,
-                ProductId = 1,
+                Id = id,
+                ProductId = id,
                 Weight = 60,
                 Energy = 200,
                 Protein = 15,

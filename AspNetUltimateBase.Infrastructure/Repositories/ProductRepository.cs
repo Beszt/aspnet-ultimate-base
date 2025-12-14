@@ -37,6 +37,17 @@ public class ProductRepository(
         return products;
     }
 
+    public async Task<IEnumerable<ProductEntity>> GetRandom(int count)
+    {
+        IEnumerable<ProductEntity> products = await _dbContext.Products
+            .Include(p => p.ProductDetails)
+            .OrderBy(_ => Guid.NewGuid())
+            .Take(count)
+            .ToListAsync();
+
+        return products;
+    }
+
     public async Task Update(ProductEntity product)
     {
         ProductEntity prod = _dbContext.Products.FirstOrDefault(p => p.Barcode == product.Barcode);
