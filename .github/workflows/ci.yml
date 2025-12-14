@@ -18,7 +18,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build
-        run: dotnet build
+        run: dotnet build AspNetUltimateBase.sln --configuration Release
 
       - name: Move secrets to appsettings.json
         uses: microsoft/variable-substitution@v1
@@ -31,4 +31,4 @@ jobs:
           Jwt.Issuer: ${{ vars.DEV_JWT_ISSUER }}
 
       - name: Test
-        run: dotnet test
+        run: dotnet test AspNetUltimateBase.sln --no-build --configuration Release
