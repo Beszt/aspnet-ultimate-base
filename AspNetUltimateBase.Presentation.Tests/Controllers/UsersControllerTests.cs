@@ -10,7 +10,7 @@ using Xunit;
 
 namespace AspNetUltimateBase.Presentation.Tests.Controllers;
 
-public class UserControllerTests
+public class UsersControllerTests
 {
     [Fact]
     public async Task Get_ReturnsNotFound_WhenUserDoesNotExist()
@@ -20,7 +20,7 @@ public class UserControllerTests
         mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((UserDto?)null);
 
-        UserController controller = new(services, mediator.Object);
+        UsersController controller = new(services, mediator.Object);
 
         IActionResult result = await controller.Get("ghost");
 
@@ -35,7 +35,7 @@ public class UserControllerTests
         mediator.Setup(m => m.Send(It.IsAny<GetUserQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new UserDto { Login = "bob", Role = "user", Password = "HIDDEN" });
 
-        UserController controller = new(services, mediator.Object);
+        UsersController controller = new(services, mediator.Object);
 
         IActionResult result = await controller.Get("bob");
 

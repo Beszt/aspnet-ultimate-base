@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace AspNetUltimateBase.Presentation.Controllers;
 
-[SwaggerTag("")]
+[Route("login")]
 public class LoginController(
     IMediator _mediator,
     JwtSettings _settings)
@@ -16,7 +16,7 @@ public class LoginController(
     [SwaggerOperation("Authentication request that produce JWT bearer")]
     [SwaggerResponse(200, "Body with JWT bearer")]
     [SwaggerResponse(400, "Incorrect body format or wrong credentials")]
-    [HttpPost("/login")]
+    [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
         if (login == null)
@@ -37,4 +37,3 @@ public class LoginController(
         return Ok(jwt);
     }
 }
-
