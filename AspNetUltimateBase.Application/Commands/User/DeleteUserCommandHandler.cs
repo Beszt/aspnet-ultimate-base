@@ -6,8 +6,9 @@ public class DeleteUserCommandHandler(
     IUserRepository _userRepository)
     : IRequestHandler<DeleteUserCommand>
 {
-    async Task IRequestHandler<DeleteUserCommand>.Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         await _userRepository.Delete(request.Login);
+        return Unit.Value;
     }
 }

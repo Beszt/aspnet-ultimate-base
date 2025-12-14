@@ -11,7 +11,7 @@ public class CreateUserCommandHandler(
     IMapper _mapper)
     : IRequestHandler<CreateUserCommand>
 {
-    async Task IRequestHandler<CreateUserCommand>.Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         UserEntity user = _mapper.Map<UserEntity>(request);
 
@@ -21,6 +21,6 @@ public class CreateUserCommandHandler(
         user.Password = passwordHasher.HashPassword(user, request.Password);
 
         await _userRepository.Create(user);
+        return Unit.Value;
     }
 }
-

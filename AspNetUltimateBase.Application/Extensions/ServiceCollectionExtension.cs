@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using System.Reflection;
 
@@ -10,6 +11,6 @@ public static class ServiceCollectionExtension
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddMediatR(Assembly.GetExecutingAssembly());
     }
 }

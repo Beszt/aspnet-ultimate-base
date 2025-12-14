@@ -10,12 +10,12 @@ public class UpdateProductCommandHandler(
     IMapper _mapper)
     : IRequestHandler<UpdateProductCommand>
 {
-    async Task IRequestHandler<UpdateProductCommand>.Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         ProductEntity product = _mapper.Map<ProductEntity>(request);
         product.UpdatedBy = request.UserId;
 
         await _productRepository.Update(product);
+        return Unit.Value;
     }
 }
-

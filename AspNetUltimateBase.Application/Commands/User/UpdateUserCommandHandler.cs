@@ -11,7 +11,7 @@ public class UpdateUserCommandHandler(
     IMapper _mapper)
     : IRequestHandler<UpdateUserCommand>
 {
-    async Task IRequestHandler<UpdateUserCommand>.Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         UserEntity user = _mapper.Map<UserEntity>(request);
 
@@ -21,6 +21,6 @@ public class UpdateUserCommandHandler(
         user.Password = passwordHasher.HashPassword(user, request.Password);
 
         await _userRepository.Update(user);
+        return Unit.Value;
     }
 }
-
