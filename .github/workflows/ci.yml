@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build
+
+      - name: Move secrets to appsettings.json
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ vars.SETTINGS_PATH }}
+        env:
+          ConnectionStrings.FoodBarAPI: ${{ secrets.DEV_CONNECTION_STRING }}
+          Jwt.Key: ${{ secrets.DEV_JWT_KEY }}
+          Jwt.ExpireInDays: ${{ vars.DEV_JWT_EXPIRE_IN_DAYS }}
+          Jwt.Issuer: ${{ vars.DEV_JWT_ISSUER }}
+
+      - name: Test
+        run: dotnet test

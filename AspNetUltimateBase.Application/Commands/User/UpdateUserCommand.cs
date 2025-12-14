@@ -1,0 +1,6 @@
+﻿using MediatR;
+using AspNetUltimateBase.Application.Dtos;
+
+namespace AspNetUltimateBase.Application.Commands.User;
+
+public class UpdateUserCommand : UserDto, IRequest;
