@@ -28,6 +28,15 @@ public class ProductRepository(
         return product;
     }
 
+    public async Task<IEnumerable<ProductEntity>> GetAll()
+    {
+        IEnumerable<ProductEntity> products = await _dbContext.Products
+            .Include(p => p.ProductDetails)
+            .ToListAsync();
+
+        return products;
+    }
+
     public async Task Update(ProductEntity product)
     {
         ProductEntity prod = _dbContext.Products.FirstOrDefault(p => p.Barcode == product.Barcode);
@@ -70,4 +79,3 @@ public class ProductRepository(
             return false;
     }
 }
-

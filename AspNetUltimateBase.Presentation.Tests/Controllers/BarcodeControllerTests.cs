@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AspNetUltimateBase.Application.Dtos;
 using AspNetUltimateBase.Application.Queries.Product;
 using AspNetUltimateBase.Presentation.Controllers;
@@ -12,6 +13,27 @@ namespace AspNetUltimateBase.Presentation.Tests.Controllers;
 
 public class BarcodeControllerTests
 {
+    [Fact]
+    public async Task GetAll_ReturnsOkWithProductList()
+    {
+        ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+        Mock<IMediator> mediator = new();
+        List<ProductDto> products =
+        [
+            new() { Barcode = 111L, Name = "Bar 1" },
+            new() { Barcode = 222L, Name = "Bar 2" }
+        ];
+        mediator.Setup(m => m.Send(It.IsAny<GetProductsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(products);
+
+        BarcodeController controller = new(services, mediator.Object);
+
+        IActionResult result = await controller.GetAll();
+
+        OkObjectResult ok = result.Should().BeOfType<OkObjectResult>().Subject;
+        ok.Value.Should().BeEquivalentTo(products);
+    }
+
     [Fact]
     public async Task Get_ReturnsNotFound_WhenProductMissing()
     {

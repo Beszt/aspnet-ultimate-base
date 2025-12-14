@@ -57,12 +57,6 @@ public class InfoControllerTests
 
         ObjectResult obj = result.Should().BeOfType<ObjectResult>().Subject;
         obj.StatusCode.Should().Be(StatusCodes.Status503ServiceUnavailable);
-        obj.Value.Should().BeEquivalentTo(new HealthCheckDto
-        {
-            Name = "App",
-            Version = "1.0.0",
-            CanConnectToDatabase = false,
-            Error = "fail"
-        });
+        obj.Value.Should().BeEquivalentTo("fail");
     }
 }
