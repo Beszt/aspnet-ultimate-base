@@ -51,7 +51,7 @@ Key points:
 ## 7. CI/CD conventions
 
 - Default branch: `develop`; feature branches merge back via PR with CI checks (lint/build/test).
-- Release workflow (manual dispatch) bumps `VersionInfo.cs`, updates `documentation/CHANGELOG.md`, builds/tests/publishes, tags `vX.Y.Z`, zips artifacts, and optionally pushes Docker images.
+- Release workflow (manual dispatch) bumps `ProgramInfo.cs`, updates `documentation/CHANGELOG.md`, builds/tests/publishes, tags `vX.Y.Z`, zips artifacts, and optionally pushes Docker images.
 - GitHub rulesets (see `documentation/rulesets/`) enforce protections for `develop`, `release/*`, and tags.
 
 ## 8. How to extend

@@ -55,7 +55,7 @@ docker run --rm -p 8080:8080 \
 ## GitHub Actions & releases
 
 - CI: runs on pull requests to `develop` (`.github/workflows/ci.yml`) and executes restore, build, and tests.
-- Release: manual dispatch (`.github/workflows/release.yml`) that creates `release/X.Y.Z`, updates `documentation/CHANGELOG.md` and `AspNetUltimateBase.Presentation/VersionInfo.cs`, builds/tests/publishes the API, tags `vX.Y.Z`, attaches a ZIP artifact, and optionally pushes Docker images to `DOCKERHUB_REPOSITORY` when credentials are provided in the `Production` environment.
+- Release: manual dispatch (`.github/workflows/release.yml`) that creates `release/X.Y.Z`, updates `documentation/CHANGELOG.md` and `AspNetUltimateBase.Presentation/ProgramInfo.cs`, builds/tests/publishes the API, tags `vX.Y.Z`, attaches a ZIP artifact, and optionally pushes Docker images to `DOCKERHUB_REPOSITORY` when credentials are provided in the `Production` environment.
 - Default branch: `develop`; import rulesets from `documentation/rulesets/` and follow `documentation/GITHUB_SETTINGS.md` for repository settings.
 
 ## Additional documentation

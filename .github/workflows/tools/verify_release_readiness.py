@@ -31,17 +31,17 @@ def validate_inputs(version: str, version_name: str) -> tuple[str, str]:
     return clean_version, clean_name
 
 
-def read_app_version(expected_content: str, path: Path) -> None:
+def read_app_version(expected_version: str, path: Path) -> None:
     if not path.exists():
         raise FileNotFoundError(f"Version file not found at {path}")
 
     try:
-        content = path.read_text(encoding="utf-8").replace("\r\n", "\n").strip()
+        content = path.read_text(encoding="utf-8").replace("\r\n", "\n")
     except OSError as exc:
         raise OSError(f"Unable to read {path}: {exc}") from exc
 
-    if content != expected_content.strip():
-        raise ValueError("VersionInfo.cs does not contain the expected version block.")
+    if f'public const string AppVersion = "{expected_version}";' not in content:
+        raise ValueError("ProgramInfo.cs does not contain the expected AppVersion value.")
 
 
 def read_changelog(version: str, version_name: str, path: Path) -> None:
@@ -118,17 +118,10 @@ def main() -> int:
         args = parse_args()
         version, version_name = validate_inputs(args.version, args.version_name)
 
-        expected_block = (
-            "namespace AspNetUltimateBase.Presentation;\n\n"
-            "public static class VersionInfo\n"
-            "{\n"
-            f'    public const string AppVersion = "{version}";\n'
-            "}\n"
-        )
-        app_version_path = Path.cwd() / "AspNetUltimateBase.Presentation" / "VersionInfo.cs"
+        app_version_path = Path.cwd() / "AspNetUltimateBase.Presentation" / "ProgramInfo.cs"
         changelog_path = Path.cwd() / "documentation" / "CHANGELOG.md"
 
-        read_app_version(expected_block, app_version_path)
+        read_app_version(version, app_version_path)
         read_changelog(version, version_name, changelog_path)
 
         expected_message = f"[workflow-release] v{version} - {version_name}"
