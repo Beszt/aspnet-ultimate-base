@@ -2,8 +2,8 @@
 
 public class ProductDto
 {
-    public long Barcode { get; set; } = default!;
-    public string Name { get; set; } = default!;
+    public long Barcode { get; set; }
+    public string Name { get; set; }
     public string Description { get; set; }
     public int Weight { get; set; }
     public int Energy { get; set; }

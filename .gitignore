@@ -1,4 +1,4 @@
 .DS_Store
-FoodBarAPI.Presentation/nlog.config
+AspNetUltimateBase.Presentation/nlog.config
 **/bin/
 **/obj/
