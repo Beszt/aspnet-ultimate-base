@@ -17,14 +17,6 @@ public class BarcodeController(
     IMediator _Mediator)
     : Controller
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
-    [AllowAnonymous]
-    [HttpGet("/barcode")]
-    public IActionResult Index()
-    {
-        return BadRequest("There are no index Bro");
-    }
-
     [SwaggerOperation("Create new product")]
     [SwaggerResponse(201, "Product created")]
     [SwaggerResponse(400, "Bad Request with validations errors")]

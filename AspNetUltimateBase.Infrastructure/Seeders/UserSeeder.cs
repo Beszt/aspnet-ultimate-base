@@ -12,7 +12,10 @@ public class UserSeeder(
     {
         if (!_dbContext.Roles.Any())
         {
-            List<RoleEntity> roles = [new() { Name = "admin" }, new() { Name = "user" }];
+            List<RoleEntity> roles = [
+                new() { Name = "admin" },
+                new() { Name = "user" }
+            ];
 
             PasswordHasher<UserEntity> passwordHasher = new();
 

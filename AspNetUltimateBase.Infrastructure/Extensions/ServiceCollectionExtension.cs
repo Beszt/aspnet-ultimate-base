@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AspNetUltimateBase.Domain.Interfaces;
+using AspNetUltimateBase.Application.Interfaces;
 using AspNetUltimateBase.Infrastructure.Persistence;
 using AspNetUltimateBase.Infrastructure.Repositories;
 using AspNetUltimateBase.Infrastructure.Seeders;
+using AspNetUltimateBase.Infrastructure.Services;
 
 namespace AspNetUltimateBase.Infrastructure.Extensions;
 
@@ -21,6 +23,6 @@ public static class ServiceCollectionExtension
         services.AddScoped<IPopulator, Populator>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDatabaseHealthChecker, DatabaseHealthChecker>();
     }
 }
-
