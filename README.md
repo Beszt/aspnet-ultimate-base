@@ -31,6 +31,15 @@ Template .NET 10 Web API for a ready-to-code backend starter. Clean Architecture
 4. Run locally: `dotnet run --project AspNetUltimateBase.Presentation -c Release` and open Swagger at the URL printed in logs (`http://localhost:5164` or `https://localhost:7149` by default).
 5. Walk through `documentation/CHECKLIST.md` and `documentation/ARCHITECTURE.md` to align tooling and conventions.
 
+## Database & migrations
+
+- Install the EF CLI if needed: `dotnet tool install --global dotnet-ef`.
+- If you rename entity classes but want to keep existing table names, the DbContext maps them explicitly (`Products`, `ProductsDetails`, `Users`, `Roles`).
+- Entities also carry `[Table]` and `[Column]` attributes to pin table/column names, so renames don’t change the schema names.
+- To recreate migrations from scratch (PowerShell, run from repo root): `Remove-Item -Recurse -Force AspNetUltimateBase.Infrastructure/Migrations`.
+- Add a fresh migration: `dotnet ef migrations add Init --project AspNetUltimateBase.Infrastructure --startup-project AspNetUltimateBase.Presentation --context FoodBarDbContext`.
+- Update the database: `dotnet ef database update --project AspNetUltimateBase.Infrastructure --startup-project AspNetUltimateBase.Presentation --context FoodBarDbContext`.
+
 ## Runtime configuration
 
 Settings can be provided via `appsettings*.json` or overridden by environment variables using double underscores:
