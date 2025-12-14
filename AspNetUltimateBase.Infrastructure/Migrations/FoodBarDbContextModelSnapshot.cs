@@ -132,9 +132,11 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Login")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
@@ -146,8 +148,7 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Login")
-                        .IsUnique()
-                        .HasFilter("[Login] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
