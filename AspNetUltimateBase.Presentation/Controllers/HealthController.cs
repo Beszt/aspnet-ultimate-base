@@ -1,6 +1,5 @@
 using AspNetUltimateBase.Application.Dtos;
 using AspNetUltimateBase.Application.Queries.Health;
-using AspNetUltimateBase.Presentation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
