@@ -7,7 +7,7 @@ Live demo is available here [AspNetUltimateBase](http://AspNetUltimateBase.obiso
 
 ### Backend
 - .NET 10.0
-- ASP.NET Minimal API
+- ASP.NET Core Web API
 - JWT authentication
 - Roles authorization
 - MediatR
