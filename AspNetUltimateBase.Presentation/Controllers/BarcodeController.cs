@@ -36,8 +36,19 @@ public class BarcodeController(
         return Created();
     }
 
+    [SwaggerOperation("Get all products")]
+    [SwaggerResponse(200, "JSON with products info", typeof(IEnumerable<ProductDto>))]
+    [HttpGet("/barcode")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll()
+    {
+        IEnumerable<ProductDto> products = await _Mediator.Send(new GetProductsQuery());
+
+        return Ok(products);
+    }
+
     [SwaggerOperation("Get product determined by EAN code")]
-    [SwaggerResponse(200, "JSON with product info")]
+    [SwaggerResponse(200, "JSON with product info", typeof(ProductDto))]
     [SwaggerResponse(404, "Product not found")]
     [HttpGet("/barcode/{barcode}")]
     [AllowAnonymous]
@@ -93,4 +104,3 @@ public class BarcodeController(
         return Ok();
     }
 }
-

@@ -6,6 +6,7 @@ public interface IProductRepository
 {
     Task Create(ProductEntity product);
     Task<ProductEntity> Get(long barcode);
+    Task<IEnumerable<ProductEntity>> GetAll();
     Task Update(ProductEntity product);
     Task Delete(long barcode);
 

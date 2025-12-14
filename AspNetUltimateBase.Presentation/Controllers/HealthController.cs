@@ -13,6 +13,8 @@ public class InfoController(
     : Controller
 {
     [SwaggerOperation("Returns service health with version info and database connectivity")]
+    [SwaggerResponse(200, "Basic application healthy info", typeof(HealthCheckDto))]
+    [SwaggerResponse(400, "Bad Request with error message", typeof(string))]
     [HttpGet("/healthCheck")]
     public async Task<IActionResult> Get()
     {
@@ -27,6 +29,6 @@ public class InfoController(
             return Ok(result);
         }
 
-        return StatusCode(StatusCodes.Status503ServiceUnavailable, result);
+        return StatusCode(StatusCodes.Status503ServiceUnavailable, result.Error);
     }
 }

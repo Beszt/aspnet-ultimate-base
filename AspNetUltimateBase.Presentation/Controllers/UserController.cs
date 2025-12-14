@@ -35,7 +35,7 @@ public class UserController(
     }
 
     [SwaggerOperation("Get user determined by it's login")]
-    [SwaggerResponse(200, "JSON with user info")]
+    [SwaggerResponse(200, "JSON with user info", typeof(UserDto))]
     [SwaggerResponse(404, "User not found")]
     [HttpGet("/user/{login}")]
     public async Task<IActionResult> Get(string login)
