@@ -6,14 +6,6 @@
 - Extended product seeder with more examples + table names fix (#19)
 - Added logo (#18)
 - Downgraded a MediatR to free version (#17)
-- [workflow-release] v0.1.0 - FoodBarAPI necromancy (#12)
-- Fixed workflows (#11)
-- Remove unused using directive in HealthController
-- Add using directive for AspNetUltimateBase.Presentation
-- Updated documentation and workflows (#9)
-- Maked new tests (#8)
-- Update README.MD
-- Initial commit
 
 ## 0.1.0 - FoodBarAPI necromancy (2025-12-14)
 
