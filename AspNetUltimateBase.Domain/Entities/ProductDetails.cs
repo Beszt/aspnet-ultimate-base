@@ -1,5 +1,8 @@
-﻿namespace AspNetUltimateBase.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace AspNetUltimateBase.Domain.Entities;
+
+[Table("ProductsDetails")]
 public class ProductDetailEntity
 {
     public int Id { get; set; }
@@ -11,7 +14,7 @@ public class ProductDetailEntity
     public double? Sugar { get; set; }
     public double? Salt { get; set; }
     public double? Fiber { get; set; }
-
     public int ProductId { get; set; }
-    public ProductEntity Product { get; set; } = default!;
+
+    public ProductEntity Product { get; set; }
 }

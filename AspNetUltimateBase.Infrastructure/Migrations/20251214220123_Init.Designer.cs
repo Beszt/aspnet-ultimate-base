@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspNetUltimateBase.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodBarDbContext))]
-    [Migration("20251213234915_Init")]
+    [Migration("20251214220123_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,47 +25,7 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<long>("Barcode")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Barcode")
-                        .IsUnique();
-
-                    b.HasIndex("CreatedBy");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductDetails", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductDetailEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +68,46 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.ToTable("ProductsDetails");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.Role", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("Barcode")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Barcode")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,7 +116,6 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -125,7 +123,7 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.User", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,9 +158,20 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.Product", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductDetailEntity", b =>
                 {
-                    b.HasOne("AspNetUltimateBase.Domain.Entities.User", "User")
+                    b.HasOne("AspNetUltimateBase.Domain.Entities.ProductEntity", "Product")
+                        .WithOne("ProductDetails")
+                        .HasForeignKey("AspNetUltimateBase.Domain.Entities.ProductDetailEntity", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductEntity", b =>
+                {
+                    b.HasOne("AspNetUltimateBase.Domain.Entities.UserEntity", "User")
                         .WithMany("Product")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,20 +180,9 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductDetails", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.UserEntity", b =>
                 {
-                    b.HasOne("AspNetUltimateBase.Domain.Entities.Product", "Product")
-                        .WithOne("ProductDetails")
-                        .HasForeignKey("AspNetUltimateBase.Domain.Entities.ProductDetails", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.User", b =>
-                {
-                    b.HasOne("AspNetUltimateBase.Domain.Entities.Role", "Role")
+                    b.HasOne("AspNetUltimateBase.Domain.Entities.RoleEntity", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -193,18 +191,17 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.Product", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.ProductEntity", b =>
                 {
-                    b.Navigation("ProductDetails")
-                        .IsRequired();
+                    b.Navigation("ProductDetails");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.Role", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.RoleEntity", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.User", b =>
+            modelBuilder.Entity("AspNetUltimateBase.Domain.Entities.UserEntity", b =>
                 {
                     b.Navigation("Product");
                 });
@@ -212,4 +209,3 @@ namespace AspNetUltimateBase.Infrastructure.Migrations
         }
     }
 }
-

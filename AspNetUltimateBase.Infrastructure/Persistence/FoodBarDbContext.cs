@@ -16,35 +16,60 @@ public class FoodBarDbContext(
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ProductEntity>()
-            .HasIndex(c => c.Barcode)
-            .IsUnique();
+        modelBuilder.Entity<ProductEntity>(builder =>
+        {
+            builder
+                .Property(c => c.Barcode)
+                .IsRequired();
 
-        modelBuilder.Entity<ProductEntity>()
-            .HasOne(c => c.ProductDetails)
-            .WithOne(c => c.Product);
 
-        modelBuilder.Entity<ProductEntity>()
-            .HasOne(c => c.User)
-            .WithMany(c => c.Product)
-            .HasForeignKey(c => c.CreatedBy);
+            builder
+                .HasIndex(c => c.Barcode)
+                .IsUnique();
 
-        modelBuilder.Entity<ProductDetailEntity>()
-            .HasOne(c => c.Product)
-            .WithOne(c => c.ProductDetails)
-            .HasForeignKey<ProductDetailEntity>(c => c.ProductId);
+            builder
+                .HasOne(c => c.ProductDetails)
+                .WithOne(c => c.Product);
 
-        modelBuilder.Entity<UserEntity>()
-            .HasIndex(c => c.Login)
-            .IsUnique();
+            builder
+                .HasOne(c => c.User)
+                .WithMany(c => c.Product)
+                .HasForeignKey(c => c.CreatedBy);
+        });
 
-        modelBuilder.Entity<UserEntity>()
-            .HasOne(c => c.Role)
-            .WithMany(c => c.Users)
-            .HasForeignKey(c => c.RoleId);
+        modelBuilder.Entity<ProductDetailEntity>(builder =>
+        {
+            builder
+                .HasOne(c => c.Product)
+                .WithOne(c => c.ProductDetails)
+                .HasForeignKey<ProductDetailEntity>(c => c.ProductId);
+        });
 
-        modelBuilder.Entity<RoleEntity>()
-            .HasMany(c => c.Users)
-            .WithOne(c => c.Role);
+        modelBuilder.Entity<UserEntity>(builder =>
+        {
+            builder
+                .Property(c => c.Login)
+                .IsRequired();
+
+            builder
+                .HasIndex(c => c.Login)
+                .IsUnique();
+
+            builder
+                .Property(c => c.Password)
+                .IsRequired();
+
+            builder
+                .HasOne(c => c.Role)
+                .WithMany(c => c.Users)
+                .HasForeignKey(c => c.RoleId);
+        });
+
+        modelBuilder.Entity<RoleEntity>(builder =>
+        {
+            builder
+                .HasMany(c => c.Users)
+                .WithOne(c => c.Role);
+        });
     }
 }
