@@ -10,13 +10,13 @@ public class CreateProductCommandHandler(
     IMapper _mapper)
     : IRequestHandler<CreateProductCommand>
 {
-    async Task IRequestHandler<CreateProductCommand>.Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         ProductEntity product = _mapper.Map<ProductEntity>(request);
 
         product.CreatedBy = request.UserId;
 
         await _productRepository.Create(product);
+        return Unit.Value;
     }
 }
-

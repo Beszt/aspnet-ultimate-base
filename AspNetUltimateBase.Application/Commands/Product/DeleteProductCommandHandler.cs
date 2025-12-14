@@ -7,8 +7,9 @@ public class DeleteProductCommandHandler(
     IProductRepository _productRepository)
     : IRequestHandler<DeleteProductCommand>
 {
-    async Task IRequestHandler<DeleteProductCommand>.Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
         await _productRepository.Delete(request.Barcode);
+        return Unit.Value;
     }
 }
