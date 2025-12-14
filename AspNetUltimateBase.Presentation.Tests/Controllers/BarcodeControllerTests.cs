@@ -1,0 +1,46 @@
+using AspNetUltimateBase.Application.Dtos;
+using AspNetUltimateBase.Application.Queries.Product;
+using AspNetUltimateBase.Presentation.Controllers;
+using FluentAssertions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Xunit;
+
+namespace AspNetUltimateBase.Presentation.Tests.Controllers;
+
+public class BarcodeControllerTests
+{
+    [Fact]
+    public async Task Get_ReturnsNotFound_WhenProductMissing()
+    {
+        ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+        Mock<IMediator> mediator = new();
+        mediator.Setup(m => m.Send(It.IsAny<GetProductQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((ProductDto?)null);
+
+        BarcodeController controller = new(services, mediator.Object);
+
+        IActionResult result = await controller.Get(123L);
+
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task Get_ReturnsOkWithProduct_WhenMediatorReturnsProduct()
+    {
+        ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+        Mock<IMediator> mediator = new();
+        ProductDto dto = new() { Barcode = 123L, Name = "Protein Bar" };
+        mediator.Setup(m => m.Send(It.IsAny<GetProductQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(dto);
+
+        BarcodeController controller = new(services, mediator.Object);
+
+        IActionResult result = await controller.Get(dto.Barcode);
+
+        OkObjectResult ok = result.Should().BeOfType<OkObjectResult>().Subject;
+        ok.Value.Should().Be(dto);
+    }
+}
