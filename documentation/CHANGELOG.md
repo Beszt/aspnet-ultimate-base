@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 - Endpoints scheme refactor (2025-12-14)
+
+- Major scheme refactor
+- Added random products GET endpoint (#23)
+
 ## 1.0.0 - Stability and improvements (2025-12-14)
 
 - Added endpoint with list of all products (#20)
