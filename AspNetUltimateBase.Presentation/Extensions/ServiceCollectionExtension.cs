@@ -10,6 +10,15 @@ public static class ServiceCollectionExtension
     public static void AddPresentation(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddEndpointsApiExplorer();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(ProgramConsts.AllowAllCorsPolicyName, policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
 
         JwtSettings jwt = new();
         configuration.GetSection("Jwt").Bind(jwt);

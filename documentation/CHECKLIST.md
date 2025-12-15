@@ -18,6 +18,7 @@ Use this list after creating a new project from the template.
 - [ ] Update `AspNetUltimateBase.Presentation/appsettings.json` or rely on environment overrides for `ConnectionStrings__AspNetUltimateBase`, `Jwt__Key`, `Jwt__Issuer`, `Jwt__ExpireInDays`
 - [ ] Copy `nlog.config.example` to `nlog.config` and supply real targets/secrets
 - [ ] Verify Swagger UI loads at `/` after running `dotnet run --project AspNetUltimateBase.Presentation`
+- [ ] Configure CORS for your real origins in `AspNetUltimateBase.Presentation/Extensions/ServiceCollectionExtension.cs` (policy name lives in `AspNetUltimateBase.Presentation/ProgramConsts.cs` and is applied in `AspNetUltimateBase.Presentation/Program.cs`)
 
 ## 4) Docker
 - [ ] Build image: `DOCKER_BUILDKIT=1 docker build -t your-org/aspnet-ultimate-base:local .`
