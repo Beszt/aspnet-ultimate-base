@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 - Swagger documentation improvement (2025-12-15)
+
+- Updated Swagger info (#26)
+
 ## 1.1.0 - Endpoints scheme refactor (2025-12-14)
 
 - Major scheme refactor
