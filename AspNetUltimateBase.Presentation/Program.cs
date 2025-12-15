@@ -3,6 +3,7 @@ using NLog.Web;
 using AspNetUltimateBase.Application.Extensions;
 using AspNetUltimateBase.Infrastructure.Extensions;
 using AspNetUltimateBase.Infrastructure.Seeders;
+using AspNetUltimateBase.Presentation;
 using AspNetUltimateBase.Presentation.Extensions;
 
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -27,19 +28,19 @@ IPopulator populator = scope.ServiceProvider.GetRequiredService<IPopulator>();
 await populator.Populate();
 
 // Configure the HTTP request pipeline.
-app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors(ProgramConsts.AllowAllCorsPolicyName);
+app.UseAuthentication();
 app.UseAuthorization();
-app.MapDefaultControllerRoute();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "REST API v1");
     c.RoutePrefix = "";
 });
+app.MapDefaultControllerRoute();
 
 app.Run();
 
 public partial class Program { }
-
