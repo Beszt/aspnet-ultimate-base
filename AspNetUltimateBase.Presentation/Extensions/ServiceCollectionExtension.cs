@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using AspNetUltimateBase.Presentation.Settings;
 
-namespace AspNetUltimateBase.Application.Extensions;
+namespace AspNetUltimateBase.Presentation.Extensions;
 
 public static class ServiceCollectionExtension
 {
@@ -36,23 +36,22 @@ public static class ServiceCollectionExtension
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Version = "v1",
-                Title = "AspNetUltimateBase",
-                Description = "An ASP.NET Minimap API for obtaining food products info by EAN barcodes.",
+                Version = ProgramInfo.AppVersion,
+                Title = $"{ProgramInfo.Name} API",
+                Description = "Demo showcasing example endpoints of the aspnet-ultimate-base template for kickstarting new ASP.NET Web API projects with a ready-to-go developer experience.",
                 Contact = new OpenApiContact
                 {
-                    Name = "Author",
+                    Name = "Maciej Obarzanek",
                     Email = "Maciej.Obarzanek@gmail.com",
-                    Url = new Uri("https://obisoft.pl")
+                    Url = new Uri("https://github.com/Beszt/aspnet-ultimate-base")
                 },
                 License = new OpenApiLicense
                 {
                     Name = "MIT License",
                     Url = new Uri("https://opensource.org/license/mit/")
-                }
+                },
             });
             c.EnableAnnotations();
         });
     }
 }
-

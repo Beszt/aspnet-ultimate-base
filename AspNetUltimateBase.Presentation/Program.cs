@@ -3,6 +3,7 @@ using NLog.Web;
 using AspNetUltimateBase.Application.Extensions;
 using AspNetUltimateBase.Infrastructure.Extensions;
 using AspNetUltimateBase.Infrastructure.Seeders;
+using AspNetUltimateBase.Presentation.Extensions;
 
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Info("Starting up...");
